@@ -6,7 +6,7 @@ import { Container, Header, Content, Left, Right, Body, Button, Icon, Title, Fab
 import { Col, Row, Grid } from "react-native-easy-grid";
 import Gestures from 'react-native-easy-gestures';
 import ViewShot from "react-native-view-shot";
-
+import axios from 'axios'
 
 const imagem = '../../assets/modelos/'
 const win = Dimensions.get("window")
@@ -32,8 +32,7 @@ export default class Maker extends Component {
   const = { caminho } = this.props
   getShoot = async () => {
     await this.refs.viewShot.capture().then(uri => {
-
-      console.log(uri)
+      this.enviarImagem(uri)
 
     });
   }
@@ -52,6 +51,17 @@ export default class Maker extends Component {
     this.setState({ text: !this.state.text, edit: !this.state.edit })
     console.log(this.state.text)
 
+  }
+  enviarImagem = async (base64) =>{
+    try{
+      const data  = {base: base64}
+      await axios.post('https://makeposter.herokuapp.com/mail',data,{headers:{'Content-Type': 'application/json'}})
+      .then(res => console.log(res.data))
+      .catch(erro => console.log('errrooouu' + erro))
+
+    }catch(error){
+      console.log(error)
+    }
   }
 
   render() {
